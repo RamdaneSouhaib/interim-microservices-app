@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-interim-auth
+spec:
+  selector:
+    matchLabels:
+      app: authentification
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: authentification
+    spec:
+      containers:
+        - name: interim-agency-container
+          image: ainasnour/quarkus-interim-jvm:latest
+          ports:
+            - containerPort: 8080
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: interim-agency-service
+spec:
+  selector:
+    app: interim-agency
+  type: NodePort
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+      nodePort: 30001
